@@ -1,0 +1,120 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: members_public
+    // Document ID: auto-generated or custom
+    // Fields:
+    //   - id: string (required)
+    //   - lastName: string (required)
+    //   - firstName: string (required)
+    //   - classe: string (required)
+    //   - filiere: string (required)
+    //   - participation: number (required)
+    //   - registrationDate: string (required)
+    //
+    // Collection: members_private
+    // Document ID: same as members_public
+    // Fields:
+    //   - phone: string (required)
+    //
+    // Collection: events
+    // Document ID: auto-generated or custom
+    // Fields:
+    //   - id: string (required)
+    //   - title: string (required)
+    //   - description: string (required)
+    //   - date: string (required)
+    //   - time: string (required)
+    //   - location: string (required)
+    //   - type: string (required)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.email == "cyao9974@gmail.com" && request.auth.token.email_verified == true
+      );
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidMemberPublic() {
+      let data = request.resource.data;
+      return hasOnlyAllowedFields(['id', 'lastName', 'firstName', 'classe', 'filiere', 'participation', 'registrationDate']) &&
+             data.id is string && data.id.size() > 0 && data.id.size() < 50 &&
+             data.lastName is string && data.lastName.size() > 0 && data.lastName.size() < 100 &&
+             data.firstName is string && data.firstName.size() > 0 && data.firstName.size() < 100 &&
+             data.classe is string && data.classe.size() > 0 && data.classe.size() < 50 &&
+             data.filiere is string && data.filiere.size() > 0 && data.filiere.size() < 50 &&
+             data.participation is number && data.participation >= 0 && data.participation <= 100 &&
+             data.registrationDate is string && data.registrationDate.size() > 0 && data.registrationDate.size() < 50;
+    }
+
+    function isValidMemberPrivate() {
+      let data = request.resource.data;
+      return hasOnlyAllowedFields(['phone']) &&
+             data.phone is string && data.phone.size() > 0 && data.phone.size() < 50;
+    }
+
+    function isValidEvent() {
+      let data = request.resource.data;
+      return hasOnlyAllowedFields(['id', 'title', 'description', 'date', 'time', 'location', 'type']) &&
+             data.id is string && data.id.size() > 0 && data.id.size() < 50 &&
+             data.title is string && data.title.size() > 0 && data.title.size() < 200 &&
+             data.description is string && data.description.size() >= 0 && data.description.size() < 2000 &&
+             data.date is string && data.date.size() > 0 && data.date.size() < 50 &&
+             data.time is string && data.time.size() > 0 && data.time.size() < 50 &&
+             data.location is string && data.location.size() > 0 && data.location.size() < 200 &&
+             data.type is string && data.type in ['workshop', 'meeting', 'hackathon', 'social'];
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /members_public/{memberId} {
+      // Anyone can read public members (for the dashboard)
+      allow read: if true;
+      // Anyone can register (create)
+      allow create: if isValidMemberPublic();
+      // Only admin can update or delete
+      allow update: if isAdmin() && isValidMemberPublic();
+      allow delete: if isAdmin();
+    }
+
+    match /members_private/{memberId} {
+      // Only admin can read private data (phone numbers)
+      allow read: if isAdmin();
+      // Anyone can register (create)
+      allow create: if isValidMemberPrivate();
+      // Only admin can update or delete
+      allow update: if isAdmin() && isValidMemberPrivate();
+      allow delete: if isAdmin();
+    }
+
+    match /events/{eventId} {
+      // Anyone can read events
+      allow read: if true;
+      // Only admin can create, update, delete events
+      allow create: if isAdmin() && isValidEvent();
+      allow update: if isAdmin() && isValidEvent();
+      allow delete: if isAdmin();
+    }
+  }
+}

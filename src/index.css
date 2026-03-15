@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #2bcdee;
+  --color-background-light: #f6f8f8;
+  --color-background-dark: #0a1113;
+  --color-background-darker: #101f22;
+  --color-slate-custom: #1c2527;
+  --font-display: "Space Grotesk", sans-serif;
+}
+
+body {
+  font-family: var(--font-display);
+  background-color: var(--color-background-dark);
+  color: #f1f5f9;
+}
+
+.circuit-bg {
+  background-color: var(--color-background-dark);
+  background-image: radial-gradient(circle at 2px 2px, rgba(43, 205, 238, 0.05) 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+.circuit-bg-alt {
+  background-color: var(--color-background-darker);
+  background-image: radial-gradient(circle at 20% 20%, rgba(43, 205, 238, 0.05) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(43, 205, 238, 0.05) 0%, transparent 40%);
+}
+
+.glass-card {
+  background: rgba(28, 37, 39, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glow-shadow {
+  box-shadow: 0 0 20px rgba(43, 205, 238, 0.3);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.2);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.5);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.5);
+}

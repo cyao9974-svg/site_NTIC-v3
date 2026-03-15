@@ -1,0 +1,57 @@
+{
+  "entities": {
+    "MemberPublic": {
+      "title": "MemberPublic",
+      "description": "Public member data",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "lastName": { "type": "string" },
+        "firstName": { "type": "string" },
+        "classe": { "type": "string" },
+        "filiere": { "type": "string" },
+        "participation": { "type": "number" },
+        "registrationDate": { "type": "string" }
+      },
+      "required": ["id", "lastName", "firstName", "classe", "filiere", "participation", "registrationDate"]
+    },
+    "MemberPrivate": {
+      "title": "MemberPrivate",
+      "description": "Private member data (PII)",
+      "type": "object",
+      "properties": {
+        "phone": { "type": "string" }
+      },
+      "required": ["phone"]
+    },
+    "ClubEvent": {
+      "title": "ClubEvent",
+      "description": "A club event",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "location": { "type": "string" },
+        "type": { "type": "string" }
+      },
+      "required": ["id", "title", "description", "date", "time", "location", "type"]
+    }
+  },
+  "firestore": {
+    "/members_public/{memberId}": {
+      "schema": { "$ref": "#/entities/MemberPublic" },
+      "description": "Collection of public club members"
+    },
+    "/members_private/{memberId}": {
+      "schema": { "$ref": "#/entities/MemberPrivate" },
+      "description": "Collection of private club member data"
+    },
+    "/events/{eventId}": {
+      "schema": { "$ref": "#/entities/ClubEvent" },
+      "description": "Collection of club events"
+    }
+  }
+}
