@@ -169,9 +169,9 @@ export default function App() {
           <Route path="events" element={<Events events={events} isAdmin={isAdmin} onAddEvent={addEvent} currentUser={currentUser} />} />
           <Route path="admin" element={
             <AdminLogin onLogin={(email) => {
-              if (email === 'demo-admin@clubntic.ci') {
+              if (email === 'demo-admin@clubntic.ci' || email === 'admin12@clubtic.ci') {
                 setIsAdmin(true);
-                setCurrentUser({ name: 'Admin Démo', role: 'admin' });
+                setCurrentUser({ name: email === 'admin12@clubtic.ci' ? 'Administrateur' : 'Admin Démo', role: 'admin' });
               }
             }} />
           } />
