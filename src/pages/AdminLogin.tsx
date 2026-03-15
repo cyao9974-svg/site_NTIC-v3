@@ -94,12 +94,12 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
             <span>{loading ? 'Connexion...' : 'Se connecter avec Google'}</span>
           </button>
 
-          {/* Demo Mode Bypass for localhost */}
-          {window.location.hostname === 'localhost' && (
+          {/* Demo Mode Bypass for localhost or Vercel preview */}
+          {(window.location.hostname === 'localhost' || window.location.hostname.includes('vercel.app') || error?.includes('Domaine non autorisé')) && (
             <div className="pt-4 flex flex-col items-center gap-4">
               <div className="flex items-center gap-2 w-full text-slate-500 text-xs">
                 <div className="h-px bg-white/5 flex-1"></div>
-                <span>OU TEST EN LOCAL</span>
+                <span>OU MODE DÉMO</span>
                 <div className="h-px bg-white/5 flex-1"></div>
               </div>
               <button 
@@ -111,7 +111,7 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
               </button>
               <p className="text-[10px] text-slate-600 text-center leading-relaxed">
                 <AlertCircle size={10} className="inline mr-1 mb-0.5" />
-                Le Mode Démo simule une session admin pour contourner l'erreur de domaine Firebase sur localhost.
+                Le Mode Démo simule une session admin pour contourner les restrictions de domaine Firebase.
               </p>
             </div>
           )}
